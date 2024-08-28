@@ -7,15 +7,15 @@
 #include <ctype.h>
 
 /*
-supports ints up to 50
+supports ints up to 34 ovoiding max long long overflow when decrypt
 */
 
 int coprime(int a);
 
 int main(int argc, char *argv[]) {
   // primes
-  int p = 2521;
-  int q = 5503;
+  int p = 5;
+  int q = 7;
   // n calc
   int n = p*q;
   int temp = (p-1)*(q-1);
@@ -26,13 +26,27 @@ int main(int argc, char *argv[]) {
   fgets(inp, sizeof(inp),stdin);
   int inp2 = atoi(inp);
 
+  // *encrypt
   double e1 = pow((double) inp2,(double) e);
-  // printf("pow: %d %d %d %f\n", inp2, e, n, e1);
+  //printf("pow: %d %d %d %f\n", inp2, e, n, e1);
   
   long long e2 = (long long) ((long long) e1) % n;
   printf("Encryted integer %lld\n",e2);
 
+
+
+  // *decrypt
   // (e * d) % temp = 1
+  long long d = 0;
+  long long ans = 0;
+  while (ans != 1) {
+    d++;
+    ans = (((long long) e) * d) % ((long long) temp);
+  }
+
+  long double e3 = (long double) pow((double) e2,(double) d);
+  long long e4 = (long long) e3 % (long long) n;
+  printf("Decryted integer %lld\n",e4);
 }
 
 int coprime(int a) {
@@ -40,7 +54,6 @@ int coprime(int a) {
   for (b = 1; b<a;  b++) {
     int ans = a % b;
     if (ans != 0) {
-        printf("first %d\n", b);
         return b;
     }
   }
